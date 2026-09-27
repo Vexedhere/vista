@@ -1,49 +1,8 @@
-const view = document.getElementById("view");
-const address = document.getElementById("address");
-const form = document.getElementById("address-form");
-
-function navigate(value) {
-  const input = value.trim();
-  if (!input) return;
-
-  let target;
-  try {
-    target = new URL(input.includes("://") ? input : "https://" + input).toString();
-  } catch {
-    target = "https://www.google.com/search?q=" + encodeURIComponent(input);
-  }
-  view.loadURL(target);
-}
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  navigate(address.value);
-});
-
-document.getElementById("back").addEventListener("click", () => {
-  if (view.canGoBack()) view.goBack();
-});
-document.getElementById("forward").addEventListener("click", () => {
-  if (view.canGoForward()) view.goForward();
-});
-document.getElementById("reload").addEventListener("click", () => view.reload());
-document.getElementById("home").addEventListener("click", () => view.loadURL("https://www.google.com"));
-
-view.addEventListener("did-navigate", (event) => {
-  address.value = event.url;
-});
-view.addEventListener("did-navigate-in-page", (event) => {
-  address.value = event.url;
-});
-
-document.addEventListener("keydown", (event) => {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
-    event.preventDefault();
-    address.focus();
-    address.select();
-  }
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "r") {
-    event.preventDefault();
-    view.reload();
-  }
-});
+const tabsEl=document.getElementById("tabs"),browserEl=document.getElementById("browser"),address=document.getElementById("address"),form=document.getElementById("address-form");const HOME="https://www.google.com";let tabs=[],active=null,next=1;
+function createTab(url=HOME){const id=next++,t=document.createElement("div");t.className="tab";t.dataset.id=id;t.innerHTML='<span class="tab-title">New Tab</span><button class="tab-close">×</button>';tabsEl.insertBefore(t,document.getElementById("new-tab"));const v=document.createElement("webview");v.className="view";v.setAttribute("allowpopups","");v.src=url;v.dataset.id=id;browserEl.appendChild(v);const x={id,t,v};tabs.push(x);t.onclick=e=>{if(!e.target.closest(".tab-close"))activate(id)};t.querySelector(".tab-close").onclick=e=>{e.stopPropagation();closeTab(id)};["did-navigate","did-navigate-in-page","page-title-updated","did-fail-load"].forEach(ev=>v.addEventListener(ev,()=>update(id)));activate(id)}
+function get(){return tabs.find(x=>x.id===active)}function activate(id){active=id;tabs.forEach(x=>{x.t.classList.toggle("active",x.id===id);x.v.classList.toggle("active",x.id===id)});update(id)}
+function update(id){const x=tabs.find(x=>x.id===id);if(!x)return;x.t.querySelector(".tab-title").textContent=(x.v.getTitle()||"New Tab").slice(0,28);if(active===id)address.value=x.v.getURL()||""}
+function closeTab(id){const i=tabs.findIndex(x=>x.id===id);if(i<0)return;tabs[i].v.remove();tabs[i].t.remove();tabs.splice(i,1);if(!tabs.length)return createTab();if(active===id)activate(tabs[Math.max(0,i-1)].id)}
+function nav(value){const s=value.trim();if(!s)return;let u;if(/^https?:\/\//i.test(s))u=s;else if(/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(s))u="https://"+s;else u="https://www.google.com/search?q="+encodeURIComponent(s);get()?.v.loadURL(u)}
+document.getElementById("new-tab").onclick=()=>createTab();document.getElementById("back").onclick=()=>get()?.v.canGoBack()&&get().v.goBack();document.getElementById("forward").onclick=()=>get()?.v.canGoForward()&&get().v.goForward();document.getElementById("reload").onclick=()=>get()?.v.reload();document.getElementById("home").onclick=()=>get()?.v.loadURL(HOME);form.onsubmit=e=>{e.preventDefault();nav(address.value)};
+document.onkeydown=e=>{const m=e.ctrlKey||e.metaKey;if(m&&e.key.toLowerCase()==="l"){e.preventDefault();address.focus();address.select()}if(m&&e.key.toLowerCase()==="r"){e.preventDefault();get()?.v.reload()}if(m&&e.key.toLowerCase()==="t"){e.preventDefault();createTab()}if(m&&e.key.toLowerCase()==="w"){e.preventDefault();if(active!==null)closeTab(active)}};createTab();
