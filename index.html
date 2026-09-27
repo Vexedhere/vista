@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISTA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="chrome">
+    <div class="tabs">
+      <div class="tab active"><span>VISTA</span><button id="close-tab">×</button></div>
+      <button class="new-tab" id="new-tab">+</button>
+    </div>
+    <div class="toolbar">
+      <button id="back" title="Back">‹</button>
+      <button id="forward" title="Forward">›</button>
+      <button id="reload" title="Reload">↻</button>
+      <form id="address-form">
+        <input id="address" autocomplete="off" spellcheck="false" placeholder="Search or enter address">
+      </form>
+      <button id="home" title="Home">⌂</button>
+    </div>
+  </header>
+
+  <main id="browser">
+    <webview id="view" src="https://www.google.com" allowpopups></webview>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
