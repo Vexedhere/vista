@@ -1,37 +1,35 @@
 # VISTA
 
-VISTA is a simple Chromium-powered desktop browser built with Electron.
+VISTA is a standalone Chromium-powered desktop browser built with Electron.
 
-## Project
-
-- Browser app: Electron + Chromium
-- Public website: `site/`
-- Hosting: Netlify
-- Source: GitHub
+## Separate products
+- **Browser:** the actual desktop application in the repository root.
+- **Website:** the `site/` directory, deployed to Netlify at `vista.mythical.buzz`.
+- **Downloads:** `vista.mythical.buzz/download/`, with installers distributed through GitHub Releases.
 
 ## Development
-
 ```bash
 npm install
 npm start
 ```
 
-## Website
-
-Set the Netlify publish directory to `site`. The included `netlify.toml` does this automatically.
-
-Suggested domain: `vista.mythical.buzz`
+## Windows installer
+```bash
+npm run dist
+```
+The installer is generated in `dist/`.
 
 ## Roadmap
-
-- [x] Basic Chromium-powered browser window
+- [x] Standalone Chromium browser
+- [x] Real multi-tab UI
 - [x] Address/search bar
 - [x] Back / forward / reload
-- [x] Public landing page
-- [ ] Multi-tab browser engine
+- [x] Separate website
+- [x] Dedicated download page
+- [ ] GitHub Actions Windows builds
 - [ ] Bookmarks
 - [ ] History
-- [ ] Downloads
+- [ ] Downloads manager
 - [ ] Settings
 - [ ] Auto-updates
-- [ ] Signed Windows releases
+- [ ] Signed releases
