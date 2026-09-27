@@ -1,0 +1,14 @@
+{
+  "name": "vista-browser",
+  "version": "0.1.0",
+  "description": "VISTA — a simple Chromium-powered browser.",
+  "main": "main.js",
+  "author": "Vexedhere",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^38.2.0"
+  }
+}
